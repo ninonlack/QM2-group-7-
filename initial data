@@ -1,0 +1,18 @@
+My initial data collection is focused on Covid case data from the 7 days post the US Election, the mail ballots returned and requested per state, and the percentage of mail ballots per state voting age population per total votes by state. As the total vote per state is not available yet, I have created an approximation of this by using voter turnout and the 2019 census of voting age populations per state.
+These sets are available on C:\Users\Student\Downloads\us election covid data (version 1).xlsb.csv. 
+I then created different Excel csv sheets choosing two variables to be compared, i.e. covid cases per state, and mail ballots per state.
+These have been presented in line graphs using the code as follows.
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import pylab
+%matplotlib inline
+pylab.rcParams['figure.figsize'] = (30., 15.)
+covidcase_path = "/content/statesvscovidcasesdatasheet.csv"
+covidcase = pd.read_csv(covidcase_path)
+covidcase.head()
+covidcase['State'].is_unique
+covidcase = pd.read_csv('/content/statesvscovidcasesdatasheet.csv', index_col='State')
+print(covidcase)
+covidcase.plot(kind='bar')
+
