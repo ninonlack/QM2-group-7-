@@ -1,0 +1,9 @@
+import plotly.express as px
+import pandas as pd
+!pip install geopandas 
+!pip install pysal
+import geopandas as gd
+import plotly.graph_objects as go
+df = pd.read_csv('/content/united_states_covid19_cases_and_deaths_by_state.csv')
+fig = go.Figure(data=go.Choropleth(locations=df['Code'], z = df['Total Cases'].astype(float), locationmode='USA-states', colorscale='Blues', colorbar_title= "Cases per 100,000"))
+fig.update_layout(title_text = 'Covid Cases per State in 2020', geo_scope='usa')
