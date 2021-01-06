@@ -43,3 +43,35 @@ complete.plot(x = 'positiveIncrease', y = 'disapprove', kind='scatter')
 complete.plot(x='positiveIncrease', y='approve', kind='scatter')
 
 plt.show()
+
+
+twitter_1 = pd.read_csv('https://query.data.world/s/777vkl2kl75s2cdodmcbpc7ewcusny')
+twitter_2 = pd.read_csv('https://query.data.world/s/fbxucju2mqsw37oxfqh7fffddwxkbe')
+twitter_3 = pd.read_csv('https://query.data.world/s/tag5ujoanh2sijfdwx7psliy5zaesv')
+twitter_4 = pd.read_csv('https://query.data.world/s/wh5am74ink4gf62gsfvnnvlevl5hll')
+
+twitter_data = pd.concat([twitter_1, twitter_2, twitter_3, twitter_4])
+trump_twitter = twitter_data[twitter_data['tweet'].str.contains("coronavirus")]
+trump_twitter['date'] = pd.to_datetime(trump_twitter['date']).dt.normalize()
+
+full_data = pd.merge(complete, trump_twitter, on='date')
+
+full_data.plot(x='positiveIncrease', y='approve', kind='scatter', color='red')
+full_data.plot(x='positiveIncrease', y='disapprove', kind='scatter', color='red')
+
+
+fig,axx = plt.subplots()
+axx.plot(full_data.date, full_data.disapprove, color='red')
+axx.set_xlabel('date', fontsize=14)
+axx.set_ylabel('disapproval percentage', color='red', fontsize=14)
+axx2=axx.twinx()
+axx2.plot(full_data.date, full_data['positiveIncrease'], color= 'blue')
+axx2.set_ylabel('Increase in positive cases', color='blue', fontsize=14)
+
+fig,axxe = plt.subplots()
+axxe.plot(full_data.date, full_data.approve, color='green')
+axxe.set_xlabel('date', fontsize=14)
+axxe.set_ylabel('approval percentage', color='green', fontsize=14)
+axxe2=axxe.twinx()
+axxe2.plot(full_data.date, full_data['positiveIncrease'], color= 'blue')
+axxe2.set_ylabel('Increase in positive cases', color='blue', fontsize=14)
