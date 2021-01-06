@@ -1,0 +1,45 @@
+#Import data#
+import pandas as pd
+approval_rating = pd.read_csv('https://query.data.world/s/rvhfnbqzt3agvfcnur7qf4dtu4hezs')
+covid_cases = pd.read_csv('https://covidtracking.com/data/download/national-history.csv')
+
+#Clean the data#
+approval_rating = approval_rating[['approve', 'disapprove', 'samplesize', 'createddate']]
+approval_rating = approval_rating[approval_rating['samplesize']==1500.0]
+approval = approval_rating.drop_duplicates(subset = ['createddate'], keep = 'first')
+approval.drop('samplesize', axis=1, inplace=True)
+approval.rename(columns = {'createddate':'date'}, inplace = True)
+approval['date'] = pd.to_datetime(approval['date'])
+
+
+covid_cases = covid_cases[['date', 'positiveIncrease']]
+covid = covid_cases.iloc[::-1]
+covid['date'] = pd.to_datetime(covid['date'])
+
+complete = pd.merge(covid, approval, on='date')
+
+%matplotlib inline 
+import pylab
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+fig,ax = plt.subplots()
+ax.plot(complete.date, complete.disapprove, color='red')
+ax.set_xlabel('date', fontsize=14)
+ax.set_ylabel('disapproval percentage', color='red', fontsize=14)
+ax2=ax.twinx()
+ax2.plot(complete.date, complete['positiveIncrease'], color= 'blue')
+ax2.set_ylabel('Increase in positive cases', color='blue', fontsize=14)
+
+fig2, axe = plt.subplots()
+axe.plot(complete.date, complete.approve, color = 'green')
+axe.set_xlabel('date', fontsize=14)
+axe.set_ylabel('approval percentage', color='green', fontsize=14)
+axe2=axe.twinx()
+axe2.plot(complete.date, complete['positiveIncrease'], color= 'blue')
+axe2.set_ylabel('Increase in positive cases', color='blue', fontsize=14)
+
+complete.plot(x = 'positiveIncrease', y = 'disapprove', kind='scatter')
+complete.plot(x='positiveIncrease', y='approve', kind='scatter')
+
+plt.show()
