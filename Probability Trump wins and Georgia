@@ -1,0 +1,73 @@
+import pandas as pd
+
+data = pd.read_csv('https://query.data.world/s/xrqjqflttcnzehuawryrcmblu4iznl')
+clean_data = data[['modeldate', 'probability', 'scenario_description']]
+clean_data['modeldate'] = pd.to_datetime(clean_data['modeldate'])
+
+biden_data_loses = clean_data[clean_data['scenario_description'].str.contains("Biden wins popular vote but")]
+trump_data_loses = clean_data[clean_data['scenario_description'].str.contains("Trump wins popular vote but")]
+trump_wins = clean_data[clean_data['scenario_description'] == "Trump wins popular vote"]
+biden_wins = clean_data[clean_data['scenario_description'] == "Biden wins popular vote"]
+georgia = covid[covid['state'] == "GA"]
+georgia['submission_date'] = pd.to_datetime(georgia['submission_date'])
+georgia.sort_values(by=['submission_date'], inplace=True)
+georgia_cases = georgia[['submission_date', 'tot_cases']]
+georgia_cases.rename(columns = {'submission_date': 'modeldate'}, inplace=True)
+
+georgia_trump_wins = pd.merge(georgia_cases, trump_wins, on = 'modeldate')
+georgia_biden_wins = pd.merge(georgia_cases, biden_wins, on = 'modeldate')
+georgia_trump_loses = pd.merge(georgia_cases, trump_data_loses, on = 'modeldate')
+georgia_biden_loses = pd.merge(georgia_cases, biden_data_loses, on = 'modeldate')
+
+
+
+covid = pd.read_csv('https://data.cdc.gov/api/views/9mfq-cb36/rows.csv?accessType=DOWNLOAD')
+
+#trump wins over time, biden wins over time, trump wins popular but loses electoral over time, biden wins popular but loses electoral over time#
+%matplotlib inline
+import pylab
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+trump_wins.plot(x='modeldate', y='probability', kind='scatter')
+biden_wins.plot(x='modeldate', y='probability', kind='scatter')
+trump_data_loses.plot(x='modeldate', y='probability', kind='scatter')
+biden_data_loses.plot(x='modeldate', y='probability', kind='scatter')
+plt.show()
+
+
+#trump wins over cases, biden wins over cases, trump wins popular and loses electoral over cases, biden wins popular and loses over cases in georgia#
+
+fig,ax = plt.subplots()
+ax.plot(georgia_trump_wins.modeldate, georgia_trump_wins.probability, color='red')
+ax.set_xlabel('date', fontsize=14)
+ax.set_ylabel('probability trump wins popular vote', color='red', fontsize=14)
+ax2=ax.twinx()
+ax2.plot(georgia_trump_wins.modeldate, georgia_trump_wins['tot_cases'], color= 'blue')
+ax2.set_ylabel('Total cases', color='blue', fontsize=14)
+
+fig,axx = plt.subplots()
+axx.plot(georgia_trump_loses.modeldate, georgia_trump_loses.probability, color='red')
+axx.set_xlabel('date', fontsize=14)
+axx.set_ylabel('probability trump loses electoral', color='red', fontsize=14)
+axx2=axx.twinx()
+axx2.plot(georgia_trump_loses.modeldate, georgia_trump_loses['tot_cases'], color= 'blue')
+axx2.set_ylabel('Total cases', color='blue', fontsize=14)
+
+fig,ax = plt.subplots()
+ax.plot(georgia_biden_wins.modeldate, georgia_biden_wins.probability, color='red')
+ax.set_xlabel('date', fontsize=14)
+ax.set_ylabel('probability biden wins popular vote', color='red', fontsize=14)
+ax2=ax.twinx()
+ax2.plot(georgia_biden_wins.modeldate, georgia_biden_wins['tot_cases'], color= 'blue')
+ax2.set_ylabel('Total cases', color='blue', fontsize=14)
+
+fig,axx = plt.subplots()
+axx.plot(georgia_biden_loses.modeldate, georgia_biden_loses.probability, color='red')
+axx.set_xlabel('date', fontsize=14)
+axx.set_ylabel('probability biden loses electoral', color='red', fontsize=14)
+axx2=axx.twinx()
+axx2.plot(georgia_biden_loses.modeldate, georgia_biden_loses['tot_cases'], color= 'blue')
+axx2.set_ylabel('Total cases', color='blue', fontsize=14)
+
+
+plt.show()
