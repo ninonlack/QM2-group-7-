@@ -1,0 +1,13 @@
+early ballot data compiled - percentage of mail ballots sent in per state, calculated by using a census estimate of voting age population per state and a percentage of mail ballots over total calculated votes from voter turnout and voting population.
+ohio has no mail ballot data, hawaii is not recorded for ease of visualising choropleth maps. louisiana, texas and tennessee do not publish requested mail ballot data, and wyoming only publishes requested mail ballots, not returned. both requested and returned have been compiled for this dataset.
+
+csv file used - /content/us election covid data.csv
+
+graphs created: mail ballots per state, bar chart
+covid cases per state 6 days before the election, bar chart
+
+choro map of mail ballots per state:
+file:///C:/Users/Student/Downloads/mailballotspercentage.html
+
+choro map of covid cases 5 days before election:
+file:///C:/Users/Student/Downloads/covidcase29oct.html
